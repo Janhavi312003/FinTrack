@@ -1,174 +1,155 @@
-# FinTrack — Finance Dashboard
+# FINTRACK — FINANCE DASHBOARD
 
-## In one sentence
+A demo finance dashboard built with Next.js, React, and Tailwind CSS. It simulates user authentication, transaction management, and role-based access (Admin / Viewer) using browser localStorage. No backend or database is required.
 
-**FinTrack is a practice finance website** where you can sign up, log in, and explore balances, charts, and transactions — **all saved in your browser** (no real server).
+## TABLE OF CONTENTS
 
----
-
-## Who is this for?
-
-- Students and **interns** building a portfolio piece  
-- Anyone learning **Next.js**, **React**, and **Tailwind**  
-- Interview prep: you can explain auth flow, roles, charts, and state clearly  
-
----
-
-## What does this app do?
-
-Imagine a tiny version of a banking or budgeting site:
-
-1. **Create an account** (Sign up) with your name, email, password, and role.  
-2. **Log in** with email and password.  
-3. See a **dashboard** with numbers and graphs.  
-4. **Browse transactions** — search, filter, sort.  
-5. If you are **Admin**, you can **add, edit, or delete** transactions and **download CSV**.  
-6. If you are **Viewer**, you only **look** — no editing.  
-7. **Log out** from the sidebar when you are done.
-
-Your login **stays** after you refresh the page until you log out.
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Data Storage](#data-storage)
+- [Project Structure](#project-structure)
+- [Installation & Running Locally](#installation--running-locally)
+- [Available Scripts](#available-scripts)
+- [Deployment](#deployment)
+- [Limitations & Security Note](#limitations--security-note)
+- [Credits](#credits)
 
 ---
 
-## Simple flow (first visit)
+## FEATURES
 
-```
-Open app
-    │
-    ├─► No accounts yet? ──► Sign up ──► Login ──► Dashboard
-    │
-    ├─► Accounts exist, not logged in? ──► Login ──► Dashboard
-    │
-    └─► Already logged in? ──► Dashboard
-```
+- **Authentication**  
+  - Sign up with name, email, password (minimum 6 characters), and role (Admin or Viewer)  
+  - Login with email/password  
+  - Session persistence across page refreshes (stored in localStorage)  
 
----
+- **Dashboard**  
+  - Summary cards: total balance, total income, total expenses  
+  - Line chart: balance over time  
+  - Pie chart: spending by category  
+  - Transaction table with search, filter (type, category), and sorting  
 
-## Feature list (easy scan)
+- **Role‑Based Access**  
+  - **Admin**: create, edit, delete transactions; export table as CSV  
+  - **Viewer**: read‑only access to transactions  
 
-| Feature | Description |
-|--------|-------------|
-| Sign up | Name, email, password (6+ chars), role: Admin or Viewer |
-| Login | Email + password; shows errors if wrong |
-| Session | Stored in browser; survives refresh |
-| Dashboard cards | Total balance, income, expenses |
-| Charts | Line = balance over time; Pie = spending by category |
-| Transactions table | Search, filter by type & category, sort |
-| Admin tools | Modal to add/edit; delete button; CSV export |
-| Insights | Short text tips (top category, month comparison, etc.) |
-| Dark mode | Toggle in the top bar |
-| Layout | Sidebar, header, footer (FinTrack branding) |
+- **Additional UI**  
+  - Dark mode toggle  
+  - Sidebar navigation, header, footer with branding  
+  - Toast notifications for actions  
 
 ---
 
-## Tech stack (what it’s built with)
+## TECH STACK
 
-| Piece | Technology |
-|-------|------------|
-| Framework | **Next.js** (App Router) |
-| Language | **JavaScript**  |
-| UI | **Tailwind CSS** |
-| Charts | **Recharts** |
-| Global state | **React Context** (auth, transactions, toast) |
-
----
-
-## How is data stored? (read this once)
-
-**There is no backend.** The app does not send your data to a company server.
-
-| What | Where it lives |
-|------|----------------|
-| User accounts | Browser **localStorage** (via `lib/auth.js`) |
-| Who is logged in | Same — session key in **localStorage** |
-| Transactions | **localStorage** (via `lib/transactionsService.js`) |
-
-To make it feel like a real app, some actions wait a **short fake delay** (like a slow API).
-
-**Security note:** Passwords are stored **as plain text** in the browser. That is **only OK for demos**. Real apps must use a server and proper security.
-
-**Reset everything:** In the browser, open DevTools → Application → Local Storage → delete keys starting with `fintrack_`, or “Clear site data”.
+| Category       | Technology                                         |
+|----------------|----------------------------------------------------|
+| Framework      | Next.js (App Router)                               |
+| Language       | JavaScript                                         |
+| Styling        | Tailwind CSS                                       |
+| Charts         | Recharts                                           |
+| State Management | React Context (auth, transactions, toast)        |
+| Persistence    | Browser localStorage (mock backend)                |
 
 ---
 
-## Run the project (step by step)
+## DATA STORAGE
 
-### 1. Install Node.js
+This application **does not have a real backend**. All data is stored locally in your browser:
 
-Download the **LTS** version from [nodejs.org](https://nodejs.org/) if you don’t have it.
+- User accounts → `localStorage` (managed by `lib/auth.js`)  
+- Active session → `localStorage`  
+- Transactions → `localStorage` (managed by `lib/transactionsService.js`)  
 
-### 2. Open the project folder
+A small artificial delay is added to some actions to simulate network latency.
 
-```bash
-cd dashboard
-```
-
-### 3. Install packages
-
-```bash
-npm install
-```
-
-### 4. Start the dev server
-
-```bash
-npm run dev
-```
-
-### 5. Open in the browser
-
-Go to **http://localhost:3000** (check the terminal if the port is different).
+**To reset all data:** Open DevTools → Application → Local Storage → delete keys starting with `fintrack_`, or use “Clear site data”.
 
 ---
 
-## Useful commands
-
-| Command | What it does |
-|---------|----------------|
-| `npm run dev` | Run app while you code (auto-refresh) |
-| `npm run build` | Create production build |
-| `npm run start` | Run production build locally |
-| `npm run lint` | Check code style with ESLint |
-
----
-
-## Folder map (where to look in the code)
+## PROJECT STRUCTURE
 
 ```
 dashboard/
 ├── app/
-│   ├── page.js                 → Sends you to signup / login / dashboard
-│   ├── layout.js               → Root HTML + fonts
-│   ├── providers.js            → Wraps app with Auth + Toast + theme
-│   ├── globals.css             
-│   ├── signup/page.js          
-│   ├── login/page.js           
-│   └── dashboard/
-│       ├── layout.js           → Protects route + loads transaction state + layout shell
-│       └── page.js             → Main dashboard 
-├── components/                 → Sidebar, header, footer, charts, table, modal, …
-├── context/                    → AuthContext, TransactionContext, ToastContext
+│ ├── page.js → Route guard (redirects to signup/login/dashboard)
+│ ├── layout.js → Root layout, fonts, theme provider
+│ ├── providers.js → Wraps app with Auth, Toast, Theme context
+│ ├── globals.css
+│ ├── signup/page.js
+│ ├── login/page.js
+│ └── dashboard/
+│ ├── layout.js → Protected route, loads transaction state
+│ └── page.js → Main dashboard view
+├── components/ → Reusable UI (Sidebar, Header, Footer, Charts, Table, Modal, etc.)
+├── context/ → AuthContext, TransactionContext, ToastContext
 └── lib/
-    ├── auth.js                 → Fake register/login + localStorage
-    ├── transactionsService.js  → Load/save transactions + seed data
-    ├── validators.js           → Email/password checks for forms
-    └── mockTransactions.js     → Sample rows for first run
+├── auth.js → Mock register/login, localStorage handlers
+├── transactionsService.js → Load/save transactions, seed data
+├── validators.js → Email/password validation
+└── mockTransactions.js → Initial sample transactions
 ```
 
 ---
 
-## Deploying (e.g. Vercel)
+## INSTALLATION & RUNNING LOCALLY
 
-You can host this like a normal Next.js site.  
-Each person’s **data stays on their own device** — visitors do **not** share one database.
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (LTS version recommended)
+
+### Steps
+
+1. **Navigate to the project folder**  
+   ```bash
+   cd dashboard
+   ```
+
+   2. **Install dependencies** 
+   ```bash
+   npm install
+   ```
+
+  3. **Start the development server** 
+  ```bash
+  npm run dev
+  ```
+ 4. **Open the app**
+
+ Visit http://localhost:3000 in your browser.
+ 
+---
+
+##  Available Scripts
+
+### Command	Description
+
+```bash
+npm run dev	 Starts the development server with hot reload
+npm run build	Creates an optimized production build
+npm run start	Runs the production build locally
+npm run lint	Checks code style using ESLint
+```
 
 ---
 
-## Credits & honesty for interviews
+##  Deployment
 
-Say clearly: *“It’s a frontend demo: auth and data use localStorage and simulated delays, not a real API or database.”*  
-That shows you understand limits and keeps expectations realistic.
+The app can be deployed as a standard Next.js static or server‑side site (e.g., to Vercel).
+Because all data stays in each user’s own localStorage, visitors do not share a common database.
 
 ---
 
-Enjoy building and explaining FinTrack.
+##  Limitations & Security Note
+
+**No real authentication** – Passwords are stored as plain text in the browser.
+
+**Local‑only data** – Refreshing or clearing browser storage will reset all information.
+
+**Demo purpose onl**y – This project is intended for portfolio, learning, and interview demonstrations.
+---
+
+
+
+
+
